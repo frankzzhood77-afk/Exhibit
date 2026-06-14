@@ -1,8 +1,8 @@
 import { getStore } from "@netlify/blobs";
 
 // ── 频率上限（想改就改这里）──
-const IP_DAILY = 5;      // 每个 IP 每天
-const SITE_HOURLY = 25;  // 全站每小时
+const IP_DAILY = 10;      // 每个 IP 每天
+const SITE_HOURLY = 50;  // 全站每小时
 
 const SYS =
   "你是一位顶尖时尚造型师兼本地生活向导。根据用户信息推荐一套今日穿搭。" +
@@ -14,7 +14,8 @@ const SYS =
   '"items":[{"category":"外套/上装/下装/鞋/包或配饰","name":"具体单品描述（鞋请写明颜色）","color":"#色值","brand":"一个具体真实品牌"} ×4-5，必须含 外套或上装、下装、鞋],' +
   '"food":{"name":"该城市一家知名且很可能真实存在的餐厅名","area":"具体街区或地标","desc":"为什么今天推荐它，1-2句"},' +
   '"transit":{"mode":"推荐交通方式（含emoji）","line":"若该城市有地铁则给真实线路名，否则留空","lineColor":"#该线路官方代表色，没有地铁则给个呼应配色的色值","why":"这条线/这个颜色为何呼应今天的穿搭，1句"},' +
-  '"persona":"今日人设：一句俏皮的身份设定。公司/街道等用该城市本地真实地点；其中大学可点名一所符合该调性的真实大学（本地或海外名校均可）"' +
+  '"persona":"今日人设：一句俏皮稍幽默的身份设定。公司/街道等用该城市本地真实地点；其中大学可点名一所符合该调性的真实大学（本地或海外名校均可）",' +
+  '"music":{"vibe":"一句话描述这身穿搭适配的音乐气质","tracks":[{"title":"歌名","artist":"歌手"} ×3]}' +
   "}";
 
 const num = (v) => Number(v || 0);
@@ -42,10 +43,10 @@ export const handler = async (event) => {
     const siteCount = num(await store.get(siteKey));
 
     if (ipCount >= IP_DAILY) {
-      return { statusCode: 429, body: JSON.stringify({ error: "今天的次数已经用完啦（每人每天 5 次），明天再来～" }) };
+      return { statusCode: 429, body: JSON.stringify({ error: "今天的次数已经用完啦（每人每天 10 次），明天再来～" }) };
     }
     if (siteCount >= SITE_HOURLY) {
-      return { statusCode: 429, body: JSON.stringify({ error: "本小时全站名额已满（每小时 25 次），请稍后再试～" }) };
+      return { statusCode: 429, body: JSON.stringify({ error: "本小时全站名额已满（每小时 50 次），请稍后再试～" }) };
     }
     await store.set(ipKey, String(ipCount + 1));
     await store.set(siteKey, String(siteCount + 1));
