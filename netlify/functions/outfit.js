@@ -2,7 +2,7 @@ import { getStore } from "@netlify/blobs";
 
 // ── 频率上限（想改就改这里）──
 const IP_DAILY = 10;      // 每个 IP 每天
-const SITE_HOURLY = 50;  // 全站每小时
+const SITE_HOURLY = 120;  // 全站每小时
 
 const SYS =
   "你是一位顶尖时尚造型师兼本地生活向导。根据用户信息推荐一套今日穿搭。" +
@@ -46,7 +46,7 @@ export const handler = async (event) => {
       return { statusCode: 429, body: JSON.stringify({ error: "今天的次数已经用完啦（每人每天 10 次），明天再来～" }) };
     }
     if (siteCount >= SITE_HOURLY) {
-      return { statusCode: 429, body: JSON.stringify({ error: "本小时全站名额已满（每小时 50 次），请稍后再试～" }) };
+      return { statusCode: 429, body: JSON.stringify({ error: "本小时全站名额已满（每小时 120 次），请稍后再试～" }) };
     }
     await store.set(ipKey, String(ipCount + 1));
     await store.set(siteKey, String(siteCount + 1));
